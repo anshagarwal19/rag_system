@@ -4,7 +4,7 @@ from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_mistralai import ChatMistralAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,15 +17,15 @@ load_dotenv()
 
 DB_DIR = "chroma-db"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-LLM_MODEL = "mistral-small-2506"
+LLM_MODEL = "gemini-2.5-flash-lite"
 
 
 def configure_api_key():
-    if os.getenv("MISTRAL_API_KEY"):
+    if os.getenv("GOOGLE_API_KEY"):
         return
 
     try:
-        os.environ["MISTRAL_API_KEY"] = st.secrets["MISTRAL_API_KEY"]
+        os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
     except (FileNotFoundError, KeyError):
         pass
 
@@ -446,7 +446,7 @@ def get_vector_store():
 def get_llm():
     configure_api_key()
 
-    return ChatMistralAI(
+    return ChatGoogleGenerativeAI(
         model=LLM_MODEL
     )
 
